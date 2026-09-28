@@ -1,17 +1,16 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { getPlaces, getPlaceBySlug } from "@/db/queries";
+import { getPlaceBySlug } from "@/db/queries";
 import { PlaceDetail } from "@/components/places/place-detail";
 
 // Data still changes by direct DB edits (no moderation UI yet), so skip ISR caching
 // for now — see the same note on app/page.tsx. Revisit once the catalog stabilizes.
+// Fully dynamic (no generateStaticParams): avoids querying the DB at build time
+// (the DB may not be migrated yet when the platform builds the image) and means
+// new places show up immediately without a redeploy.
 export const revalidate = 0;
-
-export async function generateStaticParams() {
-  const places = await getPlaces();
-  return places.map((p) => ({ slug: p.slug }));
-}
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,
