@@ -35,13 +35,22 @@ export function PlaceDetail({
     <div className="flex flex-col">
       {showGallery && (
         <div
-          className="relative shrink-0"
+          className="relative shrink-0 overflow-hidden"
           style={{
             height: 220,
-            backgroundImage:
-              "repeating-linear-gradient(135deg, var(--color-skeleton) 0 7px, var(--color-skeleton-2) 7px 14px)",
+            backgroundImage: place.photos?.[0]
+              ? undefined
+              : "repeating-linear-gradient(135deg, var(--color-skeleton) 0 7px, var(--color-skeleton-2) 7px 14px)",
           }}
         >
+          {place.photos?.[0] && (
+            // eslint-disable-next-line @next/next/no-img-element -- arbitrary R2 URLs, no fixed remote domain to allowlist
+            <img
+              src={place.photos?.[0]}
+              alt={place.name}
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+          )}
           {onClose && (
             <button
               type="button"
@@ -86,6 +95,20 @@ export function PlaceDetail({
             <TagBadge key={t} label={t} />
           ))}
         </div>
+        {(place.photos?.length ?? 0) > 1 && (
+          <div className="flex gap-2 mt-3 overflow-x-auto">
+            {place.photos!.slice(1).map((url) => (
+              // eslint-disable-next-line @next/next/no-img-element -- arbitrary R2 URLs, no fixed remote domain to allowlist
+              <img
+                key={url}
+                src={url}
+                alt={place.name}
+                className="shrink-0 rounded-xl object-cover"
+                style={{ width: 96, height: 72 }}
+              />
+            ))}
+          </div>
+        )}
         <div className="text-[15px] leading-[1.6] mt-3" style={{ color: "var(--color-body-text)" }}>
           {place.description}
         </div>

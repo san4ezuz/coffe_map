@@ -22,6 +22,7 @@ interface PlaceRow extends Record<string, unknown> {
   google_maps_url: string | null;
   owner_note: string | null;
   tag_labels: string[] | null;
+  photos: string[] | null;
 }
 
 function toPlace(row: PlaceRow): Place {
@@ -47,13 +48,14 @@ function toPlace(row: PlaceRow): Place {
     phone: row.phone ?? undefined,
     googleMapsUrl: row.google_maps_url ?? undefined,
     ownerNote: row.owner_note ? { quote: row.owner_note, author: "" } : undefined,
+    photos: row.photos ?? [],
   };
 }
 
 const PLACE_SELECT = sql`
   SELECT p.id, p.slug, p.name, cat.slug AS category_slug, cat.name_ru AS category_label,
          p.district, p.address, p.lat, p.lng, p.description_ru, p.opening_hours,
-         p.instagram, p.whatsapp, p.phone, p.google_maps_url, p.owner_note,
+         p.instagram, p.whatsapp, p.phone, p.google_maps_url, p.owner_note, p.photos,
          array_remove(array_agg(t.name_ru), NULL) AS tag_labels
   FROM places p
   JOIN cities city ON city.id = p.city_id

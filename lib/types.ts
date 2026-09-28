@@ -21,4 +21,5 @@ export interface Place {
   phone?: string;
   googleMapsUrl?: string;
   ownerNote?: { quote: string; author: string };
+  photos?: string[];
 }
