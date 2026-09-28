@@ -44,12 +44,22 @@ export function PlaceCard({
       }
     >
       <div
-        className={`relative ${isColumn ? "h-[118px] rounded-xl" : "w-[104px] h-[104px] shrink-0 rounded-[10px]"}`}
+        className={`relative overflow-hidden ${isColumn ? "h-[118px] rounded-xl" : "w-[104px] h-[104px] shrink-0 rounded-[10px]"}`}
         style={{
-          backgroundImage:
-            "repeating-linear-gradient(135deg, var(--color-skeleton) 0 6px, var(--color-skeleton-2) 6px 12px)",
+          backgroundImage: place.photos?.[0]
+            ? undefined
+            : "repeating-linear-gradient(135deg, var(--color-skeleton) 0 6px, var(--color-skeleton-2) 6px 12px)",
         }}
       >
+        {place.photos?.[0] && (
+          // eslint-disable-next-line @next/next/no-img-element -- arbitrary R2 URLs, no fixed remote domain to allowlist
+          <img
+            src={place.photos[0]}
+            alt={place.name}
+            className="absolute inset-0 w-full h-full object-cover"
+            style={{ objectPosition: `${place.coverFocalX ?? 50}% ${place.coverFocalY ?? 50}%` }}
+          />
+        )}
         {onToggleFavorite && (
           <FavoriteButton
             active={favorite}

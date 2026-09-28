@@ -99,6 +99,10 @@ export const places = pgTable(
     googleMapsUrl: text("google_maps_url"),
     openingHours: jsonb("opening_hours"),
     photos: jsonb("photos").notNull().default([]),
+    // Focal point (percent, 0-100) for cropping photos[0] in card/gallery thumbnails —
+    // CSS object-position. Defaults to center.
+    coverFocalX: doublePrecision("cover_focal_x").notNull().default(50),
+    coverFocalY: doublePrecision("cover_focal_y").notNull().default(50),
     ownerNote: text("owner_note"),
     languages: text("languages").array().notNull().default(sql`ARRAY[]::text[]`),
     status: text("status", { enum: placeStatusValues }).notNull().default("draft"),

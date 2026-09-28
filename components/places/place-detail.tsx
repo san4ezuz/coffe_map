@@ -49,6 +49,7 @@ export function PlaceDetail({
               src={place.photos?.[0]}
               alt={place.name}
               className="absolute inset-0 w-full h-full object-cover"
+              style={{ objectPosition: `${place.coverFocalX ?? 50}% ${place.coverFocalY ?? 50}%` }}
             />
           )}
           {onClose && (

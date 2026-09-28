@@ -23,6 +23,8 @@ interface PlaceRow extends Record<string, unknown> {
   owner_note: string | null;
   tag_labels: string[] | null;
   photos: string[] | null;
+  cover_focal_x: number;
+  cover_focal_y: number;
 }
 
 function toPlace(row: PlaceRow): Place {
@@ -49,6 +51,8 @@ function toPlace(row: PlaceRow): Place {
     googleMapsUrl: row.google_maps_url ?? undefined,
     ownerNote: row.owner_note ? { quote: row.owner_note, author: "" } : undefined,
     photos: row.photos ?? [],
+    coverFocalX: row.cover_focal_x,
+    coverFocalY: row.cover_focal_y,
   };
 }
 
@@ -56,6 +60,7 @@ const PLACE_SELECT = sql`
   SELECT p.id, p.slug, p.name, cat.slug AS category_slug, cat.name_ru AS category_label,
          p.district, p.address, p.lat, p.lng, p.description_ru, p.opening_hours,
          p.instagram, p.whatsapp, p.phone, p.google_maps_url, p.owner_note, p.photos,
+         p.cover_focal_x, p.cover_focal_y,
          array_remove(array_agg(t.name_ru), NULL) AS tag_labels
   FROM places p
   JOIN cities city ON city.id = p.city_id

@@ -11,6 +11,8 @@ export async function getAllPlacesForAdmin() {
       descriptionRu: places.descriptionRu,
       status: places.status,
       photos: places.photos,
+      coverFocalX: places.coverFocalX,
+      coverFocalY: places.coverFocalY,
     })
     .from(places)
     .orderBy(asc(places.name));
@@ -41,5 +43,13 @@ export async function removePlacePhoto(id: string, url: string): Promise<void> {
   await db
     .update(places)
     .set({ photos: photos.filter((p) => p !== url), updatedAt: new Date() })
+    .where(eq(places.id, id));
+}
+
+export async function updatePlaceCoverFocal(id: string, x: number, y: number): Promise<void> {
+  const clamp = (n: number) => Math.min(100, Math.max(0, n));
+  await db
+    .update(places)
+    .set({ coverFocalX: clamp(x), coverFocalY: clamp(y), updatedAt: new Date() })
     .where(eq(places.id, id));
 }

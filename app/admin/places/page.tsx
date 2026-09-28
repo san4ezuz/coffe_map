@@ -76,7 +76,11 @@ export default async function AdminPlacesPage({
             </button>
           </form>
 
-          <PhotoUploader placeId={p.id} initialPhotos={(p.photos as string[] | null) ?? []} />
+          <PhotoUploader
+            placeId={p.id}
+            initialPhotos={(p.photos as string[] | null) ?? []}
+            initialFocal={{ x: p.coverFocalX, y: p.coverFocalY }}
+          />
           </div>
         ))}
       </div>

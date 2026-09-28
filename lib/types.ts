@@ -22,4 +22,6 @@ export interface Place {
   googleMapsUrl?: string;
   ownerNote?: { quote: string; author: string };
   photos?: string[];
+  coverFocalX?: number;
+  coverFocalY?: number;
 }
