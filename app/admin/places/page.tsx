@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
-import { getAllPlacesForAdmin, updatePlaceAdmin } from "@/db/admin-places";
+import { getAllPlacesForAdmin, getAllTags, updatePlaceAdmin } from "@/db/admin-places";
 import { PhotoUploader } from "@/components/admin/photo-uploader";
+import { TagEditor } from "@/components/admin/tag-editor";
 
 export const revalidate = 0;
 
@@ -22,7 +23,7 @@ export default async function AdminPlacesPage({
   searchParams: Promise<{ ok?: string }>;
 }) {
   const { ok } = await searchParams;
-  const places = await getAllPlacesForAdmin();
+  const [places, allTags] = await Promise.all([getAllPlacesForAdmin(), getAllTags()]);
 
   return (
     <div className="flex-1 min-h-0 overflow-y-auto px-6 py-8 max-w-[720px] mx-auto w-full">
@@ -30,9 +31,14 @@ export default async function AdminPlacesPage({
         <h1 className="font-semibold text-2xl" style={{ fontFamily: "var(--font-spectral)", color: "var(--color-text)" }}>
           Места на карте
         </h1>
-        <Link href="/admin" className="text-sm underline" style={{ color: "var(--color-primary-strong)" }}>
-          Модерация заявок
-        </Link>
+        <div className="flex gap-3">
+          <Link href="/admin/import" className="text-sm underline" style={{ color: "var(--color-primary-strong)" }}>
+            Импорт мест
+          </Link>
+          <Link href="/admin" className="text-sm underline" style={{ color: "var(--color-primary-strong)" }}>
+            Модерация заявок
+          </Link>
+        </div>
       </div>
       <p className="text-sm mt-1" style={{ color: "var(--color-text-secondary)" }}>
         Редактируйте описание для уже опубликованных мест.
@@ -75,6 +81,8 @@ export default async function AdminPlacesPage({
               Сохранить
             </button>
           </form>
+
+          <TagEditor placeId={p.id} initialTags={p.tags} allTags={allTags} />
 
           <PhotoUploader
             placeId={p.id}
